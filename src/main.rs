@@ -1,3 +1,4 @@
+use ansi_term::Colour;
 use dotenv::dotenv;
 use serde::Deserialize;
 use std::env;
@@ -19,12 +20,17 @@ fn get_articles(url: &str) -> Result<Articles, Box<dyn Error>> {
 
     let articles: Articles = serde_json::from_str(&response)?;
 
-    dbg!(articles);
-
-    todo!()
+    Ok(articles)
 }
 
-fn main() {
+fn render_articles(articles: &Articles) {
+    for a in &articles.articles {
+        println!("{}", Colour::Green.bold().paint(a.title.to_string()));
+        println!("{}", Colour::Yellow.paint(format!("> {}\n", a.url)));
+    }
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
 
     let url = format!(
@@ -32,5 +38,9 @@ fn main() {
         env::var("API_KEY").unwrap()
     );
 
-    let articles = get_articles(&url);
+    let articles = get_articles(&url)?;
+
+    render_articles(&articles);
+
+    Ok(())
 }
