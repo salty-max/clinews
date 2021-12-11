@@ -70,7 +70,6 @@ dependencies = [
  "dotenv",
  "newsapi",
  "termimad",
- "thiserror",
 ]
 
 [[package]]
